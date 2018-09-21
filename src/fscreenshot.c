@@ -11,11 +11,8 @@
 #define DEFAULT_PATH "~/"
 #define DEFAULT_PREFIX "Screenshot"
 
-static int geturl(
-	char *des,
-	const char *url,
-	const char *prefix
-) {
+static int geturl(char *des, const char *url, const char *prefix)
+{
 	time_t now;
 	struct tm *localnow;
 	char buf[128];	

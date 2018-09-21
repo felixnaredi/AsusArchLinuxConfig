@@ -5,7 +5,7 @@
 #
 
 unless ARGV.length > 0
-  puts "USAGE:\n  fxpdf FILE
+  puts "USAGE:\n  fxpdf [FILES...]"
   return
 end
 

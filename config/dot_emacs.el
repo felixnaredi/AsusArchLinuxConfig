@@ -1,7 +1,3 @@
-;;
-;; Original path: ~/.emacs
-;; -------------------------------------------------------------
-
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -40,7 +36,7 @@
 
 ;; Melpa
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
+
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 
@@ -52,9 +48,12 @@
   "Inserts a time string"
   (interactive)
   (insert (format-time-string "%F %X %z")))
-
 (global-set-key (kbd "C-x t") 'insert-time-string)
 
+(defun insert-flat-time-string ()
+  (interactive)
+  (insert (format-time-string "%Y%m%d%H%M%S")))
+(global-set-key (kbd "C-x M-t") 'insert-flat-time-string)
 
 (defun revert-buffer-no-confirm ()
   "Reverts buffer without confirmation"
@@ -63,23 +62,33 @@
 
 (global-set-key (kbd "C-x r") 'revert-buffer-no-confirm)
 
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
 
 ;; C set up
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun dasmodel::init-flycheck-clang-analyze (should-add-hook)
+(defun init-flycheck-clang-analyze ()
   "Initalizes flycheck-clang-analyze. It is a demanding minor mode"
   (with-eval-after-load 'flycheck
     (require 'flycheck-clang-analyzer)
-    (flycheck-clang-analyzer-setup))
-  (if should-add-hook
-      (add-hook 'c-mode-common-hook 'flycheck-mode) nil))
+    (flycheck-clang-analyzer-setup)
+    (add-hook 'c-mode-common-hook 'flycheck-mode) nil))
 
-(add-hook 'c-mode-hook '(lambda ()
-			  (c-set-style "linux")))
+(add-hook 'c-mode-hook '(lambda () (c-set-style "linux")))
+
+(add-hook 'c++-mode-hook
+	  '(lambda ()
+	     (c-set-style "stroustrup")
+	     (c-set-offset 'func-decl-cont 0)
+	     (c-set-offset 'inline-open 0)
+	     (c-set-offset 'statement-block-intro '+)
+	     (c-set-offset 'statement-cont 0)))
 
 (add-hook 'c-mode-common-hook 'auto-complete-mode)
-; (dasmodel::init-flycheck-clang-analyze 1) ;; It slows down too much.
+; (init-flycheck-clang-analyze) ;; It slows down too much.
+
+(add-to-list 'auto-mode-alist '("\\.glsl\\'" . c-mode))
 
 ;; Ruby set up
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
